@@ -1,0 +1,70 @@
+package io.species.analyzer.presentation.rest
+
+import io.species.analyzer.application.SpecieAnalyzerApplicationService
+import io.species.analyzer.configuration.fixtures.DatabaseAssertion
+import io.species.analyzer.configuration.fixtures.DatabaseFixture
+import io.species.analyzer.configuration.fixtures.JsonFixture.Companion.loadJsonFile
+import io.species.analyzer.domain.specie.stats.StatsIdentifier
+import io.species.analyzer.infrastructure.exception.StatsExecutorException
+import org.junit.FixMethodOrder
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.runners.MethodSorters
+import org.skyscreamer.jsonassert.JSONAssert.assertEquals
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.jdbc.Sql
+import org.springframework.test.context.jdbc.SqlGroup
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.MvcResult
+import org.springframework.test.web.servlet.ResultMatcher
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
+@SpringBootTest
+@ContextConfiguration
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+@FixMethodOrder(MethodSorters.JVM)
+class SpecieAnalysisStatsIntegrationTest(@Autowired val mockMvc: MockMvc,
+                                         @Autowired val databaseFixture: DatabaseFixture,
+                                         @Autowired val specieAnalyzerApplicationService: SpecieAnalyzerApplicationService)
+    : DatabaseAssertion by databaseFixture {
+
+    private val statsEndpoint = "/v1/stats"
+
+    @Test
+    @SqlGroup(
+        Sql(scripts = ["classpath:scripts/clear.sql", "classpath:scripts/data.sql"], executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+        Sql(scripts = ["classpath:scripts/clear.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    )
+    fun givenPreviousSpeciesAnalyzed_whenPerformGetStats_shouldBeReturnRatioStatsAndStatusOk() {
+        val mvcResult = performGetAndExpect(statsEndpoint, status().isOk)
+        assertEquals(loadJsonFile("expected/response/stats/expected_stats.json"), mvcResult.response.contentAsString, true)
+    }
+
+    @Test
+    @SqlGroup(
+        Sql(scripts = ["classpath:scripts/clear.sql"], executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+        Sql(scripts = ["classpath:scripts/clear.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    )
+    fun givenNoneSpeciesAnalyzed_whenPerformGetStats_shouldBeReturnRatioZeroStatsAndStatusOk() {
+        val mvcResult = performGetAndExpect(statsEndpoint, status().isOk)
+        assertEquals(loadJsonFile("expected/response/stats/expected_zero_stats.json"), mvcResult.response.contentAsString, true)
+    }
+
+    @Test
+    fun givenANotIdentifierStats_whenPerformViewStats_shouldBeThrowsStatsExecutorException() {
+        assertThrows(StatsExecutorException::class.java) { specieAnalyzerApplicationService.viewStats(StatsIdentifier.NOT_IDENTIFIED) }
+    }
+
+    protected fun performGetAndExpect(endpoint: String, expected: ResultMatcher): MvcResult =
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get(endpoint)).andExpect(expected).andReturn()
+        } catch (exception: Exception) {
+            throw RuntimeException(exception)
+        }
+}

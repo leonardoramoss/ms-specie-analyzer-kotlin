@@ -1,0 +1,7 @@
+spring:
+    jpa:
+        show-sql: false
+    liquibase:
+        enabled: false
+    main:
+        banner-mode: off
