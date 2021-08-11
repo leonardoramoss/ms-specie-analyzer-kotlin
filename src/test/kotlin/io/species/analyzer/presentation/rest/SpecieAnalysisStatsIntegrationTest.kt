@@ -7,8 +7,8 @@ import io.species.analyzer.configuration.fixtures.JsonFixture.Companion.loadJson
 import io.species.analyzer.domain.specie.stats.StatsIdentifier
 import io.species.analyzer.infrastructure.exception.StatsExecutorException
 import org.junit.FixMethodOrder
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Test
 import org.junit.runners.MethodSorters
 import org.skyscreamer.jsonassert.JSONAssert.assertEquals
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,12 +29,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @FixMethodOrder(MethodSorters.JVM)
-class SpecieAnalysisStatsIntegrationTest(@Autowired val mockMvc: MockMvc,
-                                         @Autowired val databaseFixture: DatabaseFixture,
-                                         @Autowired val specieAnalyzerApplicationService: SpecieAnalyzerApplicationService)
-    : DatabaseAssertion by databaseFixture {
-
-    private val statsEndpoint = "/v1/stats"
+internal class SpecieAnalysisStatsIntegrationTest(
+    @Autowired private val mockMvc: MockMvc,
+    @Autowired private val databaseFixture: DatabaseFixture,
+    @Autowired private val specieAnalyzerApplicationService: SpecieAnalyzerApplicationService
+) : DatabaseAssertion by databaseFixture {
 
     @Test
     @SqlGroup(
@@ -42,7 +41,7 @@ class SpecieAnalysisStatsIntegrationTest(@Autowired val mockMvc: MockMvc,
         Sql(scripts = ["classpath:scripts/clear.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     )
     fun givenPreviousSpeciesAnalyzed_whenPerformGetStats_shouldBeReturnRatioStatsAndStatusOk() {
-        val mvcResult = performGetAndExpect(statsEndpoint, status().isOk)
+        val mvcResult = performGetAndExpect(status().isOk)
         assertEquals(loadJsonFile("expected/response/stats/expected_stats.json"), mvcResult.response.contentAsString, true)
     }
 
@@ -52,7 +51,7 @@ class SpecieAnalysisStatsIntegrationTest(@Autowired val mockMvc: MockMvc,
         Sql(scripts = ["classpath:scripts/clear.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     )
     fun givenNoneSpeciesAnalyzed_whenPerformGetStats_shouldBeReturnRatioZeroStatsAndStatusOk() {
-        val mvcResult = performGetAndExpect(statsEndpoint, status().isOk)
+        val mvcResult = performGetAndExpect(status().isOk)
         assertEquals(loadJsonFile("expected/response/stats/expected_zero_stats.json"), mvcResult.response.contentAsString, true)
     }
 
@@ -61,9 +60,10 @@ class SpecieAnalysisStatsIntegrationTest(@Autowired val mockMvc: MockMvc,
         assertThrows(StatsExecutorException::class.java) { specieAnalyzerApplicationService.viewStats(StatsIdentifier.NOT_IDENTIFIED) }
     }
 
-    protected fun performGetAndExpect(endpoint: String, expected: ResultMatcher): MvcResult =
+    protected fun performGetAndExpect(expected: ResultMatcher): MvcResult =
         try {
-            mockMvc.perform(MockMvcRequestBuilders.get(endpoint)).andExpect(expected).andReturn()
+            val statsEndpoint = "/v1/stats"
+            mockMvc.perform(MockMvcRequestBuilders.get(statsEndpoint)).andExpect(expected).andReturn()
         } catch (exception: Exception) {
             throw RuntimeException(exception)
         }

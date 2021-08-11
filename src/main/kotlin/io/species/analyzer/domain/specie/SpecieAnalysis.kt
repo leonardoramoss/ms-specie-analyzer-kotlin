@@ -44,12 +44,12 @@ data class SpecieAnalysis(
         private const val MINIMUM_NxN_LENGTH = 4
         const val DELIMITER = "-"
 
-        private operator fun invoke(uuid: UUID?, dna: DNA, expectedIdentifier: SpecieIdentifier?, identifier: SpecieIdentifier?, analyzedAt: LocalDateTime?) : SpecieAnalysis =
-            SpecieAnalysis(uuid, dna, expectedIdentifier?: identifier, identifier, analyzedAt)
+        private operator fun invoke(uuid: UUID?, dna: DNA, expectedIdentifier: SpecieIdentifier?, identifier: SpecieIdentifier?, analyzedAt: LocalDateTime?): SpecieAnalysis =
+            SpecieAnalysis(uuid, dna, expectedIdentifier ?: identifier, identifier, analyzedAt)
 
-        operator fun invoke(uuid: UUID? = null, dna: Array<DNA>? = null, expectedIdentifier: SpecieIdentifier? = null, identifier: SpecieIdentifier? = null, analyzedAt: LocalDateTime? = null) : SpecieAnalysis {
+        operator fun invoke(uuid: UUID? = null, dna: Array<DNA>? = null, expectedIdentifier: SpecieIdentifier? = null, identifier: SpecieIdentifier? = null, analyzedAt: LocalDateTime? = null): SpecieAnalysis {
             dna?.let {
-                if(dna.isNullOrEmpty().not() && it.size >= MINIMUM_NxN_LENGTH) {
+                if (dna.isNullOrEmpty().not() && it.size >= MINIMUM_NxN_LENGTH) {
                     checkAllowedNitrogenousBase(it)
                     checkDNAStructure(it)
                     return invoke(uuid, it.joinToString(DELIMITER), expectedIdentifier, identifier, analyzedAt)
@@ -61,40 +61,42 @@ data class SpecieAnalysis(
 
         private fun checkAllowedNitrogenousBase(dna: Array<DNA>) {
             dna.forEach {
-                if(ALLOWED_NITROGENOUS_BASE.matcher(it).matches().not())
-                    throw SpecieAnalysisValidationException("DNA sequence $it in ${dna.joinToString()} is not valid.") }
+                if (ALLOWED_NITROGENOUS_BASE.matcher(it).matches().not())
+                    throw SpecieAnalysisValidationException("DNA sequence $it in ${dna.joinToString()} is not valid.")
+            }
         }
 
         private fun checkDNAStructure(dna: Array<DNA>) {
             val sequenceLength = dna.size
             dna.forEach {
-                if(sequenceLength != it.length)
-                    throw SpecieAnalysisValidationException("There is not a NxN DNA sequence.") }
+                if (sequenceLength != it.length)
+                    throw SpecieAnalysisValidationException("There is not a NxN DNA sequence.")
+            }
         }
     }
 
     /**
      *
      */
-    fun originalDNA() : Array<DNA> =
+    fun originalDNA(): Array<DNA> =
         this.dna.split(DELIMITER).toTypedArray()
 
     /**
      *
      */
-    fun withUUID(uuidGenerator: UUIDGenerator<SpecieAnalysis>) : SpecieAnalysis =
+    fun withUUID(uuidGenerator: UUIDGenerator<SpecieAnalysis>): SpecieAnalysis =
         this.withUUID(uuidGenerator.generate(this))
 
     /**
      *
      */
-    private fun withUUID(uuid: UUID) : SpecieAnalysis =
+    private fun withUUID(uuid: UUID): SpecieAnalysis =
         invoke(uuid, this.dna, this.expectedIdentifier, this.identifier, this.analyzedAt)
 
     /**
      *
      */
-    fun markExpectedIdentifierAs(specieIdentifier: SpecieIdentifier) : SpecieAnalysis {
+    fun markExpectedIdentifierAs(specieIdentifier: SpecieIdentifier): SpecieAnalysis {
         this.expectedIdentifier = specieIdentifier
         return this
     }
@@ -102,7 +104,7 @@ data class SpecieAnalysis(
     /**
      *
      */
-    fun markIdentifiedAs(specieIdentifier: SpecieIdentifier) : SpecieAnalysis {
+    fun markIdentifiedAs(specieIdentifier: SpecieIdentifier): SpecieAnalysis {
         this.identifier = specieIdentifier
         this.analyzedAt = LocalDateTime.now()
         return this
@@ -111,12 +113,13 @@ data class SpecieAnalysis(
     /**
      *
      */
-    fun isIdentifierMatchesAsExpected() : Boolean {
-        if(this.uuid != null && this.analyzedAt != null
-            && this.expectedIdentifier == null && this.identifier != null) {
+    fun isIdentifierMatchesAsExpected(): Boolean {
+        if (this.uuid != null && this.analyzedAt != null &&
+            this.expectedIdentifier == null && this.identifier != null
+        ) {
             return true
         }
-        if(this.identifier == null) {
+        if (this.identifier == null) {
             return false
         }
         return expectedIdentifier == identifier

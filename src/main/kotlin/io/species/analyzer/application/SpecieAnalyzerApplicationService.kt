@@ -16,15 +16,17 @@ import io.species.analyzer.infrastructure.fetcher.Fetcher
 import java.util.EnumMap
 
 @ApplicationService
-class SpecieAnalyzerApplicationService(val fetchSpecieAnalyzed: Fetcher<SpecieAnalysis, SpecieAnalysis>,
-                                       val analyzers: Map<SpecieIdentifier, Analyzer> = EnumMap(SpecieIdentifier::class.java),
-                                       val executors: Map<StatsIdentifier, StatsExecutor<*>> = EnumMap(StatsIdentifier::class.java),
-                                       val eventNotifier: EventNotifier<DomainEvent<*>>) {
+class SpecieAnalyzerApplicationService(
+    private val fetchSpecieAnalyzed: Fetcher<SpecieAnalysis, SpecieAnalysis>,
+    private val analyzers: Map<SpecieIdentifier, Analyzer> = EnumMap(SpecieIdentifier::class.java),
+    private val executors: Map<StatsIdentifier, StatsExecutor<*>> = EnumMap(StatsIdentifier::class.java),
+    private val eventNotifier: EventNotifier<DomainEvent<*>>
+) {
 
-    fun analyze(specieAnalysis: SpecieAnalysis) : SpecieAnalysis? {
+    fun analyze(specieAnalysis: SpecieAnalysis): SpecieAnalysis? {
         val analysis = fetchSpecieAnalyzed.fetch(specieAnalysis)
 
-        return analysis?: let {
+        return analysis ?: let {
             val analyzer = analyzers[specieAnalysis.expectedIdentifier]
                 ?: throw SpecieAnalyzerNotFoundException("There are no analyzer for this specie: ${specieAnalysis.expectedIdentifier}")
 

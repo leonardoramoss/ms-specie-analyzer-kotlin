@@ -7,9 +7,10 @@ import org.springframework.stereotype.Component
 import java.util.concurrent.ExecutorService
 
 @Component
-class SpecieAnalyzedCounterEventListener(val executorService: ExecutorService,
-                                         val incrementSpecieAnalyzedCounterCommand: IncrementSpecieAnalyzedCounterCommand) :
-    EventListener<SpecieAnalyzedEvent> {
+class SpecieAnalyzedCounterEventListener(
+    private val executorService: ExecutorService,
+    private val incrementSpecieAnalyzedCounterCommand: IncrementSpecieAnalyzedCounterCommand
+) : EventListener<SpecieAnalyzedEvent> {
 
     override fun onEvent(event: SpecieAnalyzedEvent) {
         executorService.execute { incrementSpecieAnalyzedCounterCommand.execute(event.source) }

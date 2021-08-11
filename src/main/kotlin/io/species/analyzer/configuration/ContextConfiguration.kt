@@ -19,17 +19,23 @@ import java.util.concurrent.Executors
 @Configuration
 class ContextConfiguration {
 
-    private val AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors()
+    private val availableProcessors = Runtime.getRuntime().availableProcessors()
 
     @Bean
-    fun threadPool() : ExecutorService = Executors.newFixedThreadPool(AVAILABLE_PROCESSORS)
+    fun threadPool(): ExecutorService = Executors.newFixedThreadPool(availableProcessors)
 
     @Bean
-    fun listeners(specieAnalyzedEventListener: SpecieAnalyzedEventListener,
-                  specieAnalyzedCounterEventListener: SpecieAnalyzedCounterEventListener): Map<EventType, List<EventListener<DomainEvent<*>>>> =
-        mapOf(EventType.SPECIE_ANALYZED to listOf(
-            specieAnalyzedEventListener as EventListener<DomainEvent<*>>,
-            specieAnalyzedCounterEventListener as EventListener<DomainEvent<*>>))
+    @Suppress("UNCHECKED_CAST")
+    fun listeners(
+        specieAnalyzedEventListener: SpecieAnalyzedEventListener,
+        specieAnalyzedCounterEventListener: SpecieAnalyzedCounterEventListener
+    ): Map<EventType, List<EventListener<DomainEvent<*>>>> =
+        mapOf(
+            EventType.SPECIE_ANALYZED to listOf(
+                specieAnalyzedEventListener,
+                specieAnalyzedCounterEventListener
+            ) as List<EventListener<DomainEvent<*>>>
+        )
 
     @Bean
     fun analyzers(primateAnalyzer: PrimateAnalyzer): Map<SpecieIdentifier, Analyzer> =
@@ -37,5 +43,5 @@ class ContextConfiguration {
 
     @Bean
     fun statsExecutors(statsHumanSimianRatioExecutor: StatsHumanSimianRatioExecutor): Map<StatsIdentifier, StatsExecutor<*>> =
-        mapOf(StatsIdentifier.RATIO_SIMIAN_HUMAN to statsHumanSimianRatioExecutor);
+        mapOf(StatsIdentifier.RATIO_SIMIAN_HUMAN to statsHumanSimianRatioExecutor)
 }

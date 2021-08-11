@@ -7,9 +7,9 @@ import javax.persistence.Converter
 @Converter(autoApply = true)
 class UUIDAttributeConverter : AttributeConverter<UUID?, String?> {
 
-    override fun convertToDatabaseColumn(uuid: UUID?): String?
-        = uuid?.toString()
+    override fun convertToDatabaseColumn(uuid: UUID?): String? =
+        uuid?.toString()
 
-    override fun convertToEntityAttribute(s: String?): UUID
-        = UUID.fromString(s)
+    override fun convertToEntityAttribute(s: String?): UUID =
+        UUID.fromString(s)
 }

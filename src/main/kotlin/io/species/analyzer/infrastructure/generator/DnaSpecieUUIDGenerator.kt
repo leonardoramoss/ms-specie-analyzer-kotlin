@@ -7,7 +7,7 @@ import java.util.UUID
 @Component
 class DnaSpecieUUIDGenerator : UUIDGenerator<SpecieAnalysis> {
 
-    override fun generate(speciesAnalysis: SpecieAnalysis?): UUID =
-        speciesAnalysis?.let { UUID.nameUUIDFromBytes(it.dna.toByteArray()) }
+    override fun generate(argument: SpecieAnalysis?): UUID =
+        argument?.let { UUID.nameUUIDFromBytes(it.dna.toByteArray()) }
             ?: TODO()
 }

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-class PrimateAnalyzerTest {
+internal class PrimateAnalyzerTest {
 
     private val analyzer: PrimateAnalyzer = PrimateAnalyzer()
 

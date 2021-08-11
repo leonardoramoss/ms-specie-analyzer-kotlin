@@ -3,7 +3,7 @@ package io.species.analyzer.domain.specie.analyzer.manipulation
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class DNAManipulationTest {
+internal class DNAManipulationTest {
 
     private val DNA_SEQUENCE = arrayOf("AAAA", "BBBB", "CCCC", "DDDD")
     private val EXPECTED_TRANSPOSED_DNA_SEQUENCE = arrayOf("ABCD", "ABCD", "ABCD", "ABCD")

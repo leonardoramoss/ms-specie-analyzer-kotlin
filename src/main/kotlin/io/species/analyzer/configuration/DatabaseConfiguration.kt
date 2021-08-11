@@ -20,10 +20,11 @@ import javax.sql.DataSource
 @EnableTransactionManagement
 @EnableConfigurationProperties(JpaProperties::class)
 @EnableJpaRepositories(basePackageClasses = [ SpecieAnalysisRepository::class ])
-class DatabaseConfiguration(dataSource: DataSource,
-                            jpaProperties: JpaProperties,
-                            jtaTransactionManager: ObjectProvider<JtaTransactionManager>) :
-    JpaBaseConfiguration(dataSource, jpaProperties, jtaTransactionManager) {
+class DatabaseConfiguration(
+    dataSource: DataSource,
+    jpaProperties: JpaProperties,
+    jtaTransactionManager: ObjectProvider<JtaTransactionManager>
+) : JpaBaseConfiguration(dataSource, jpaProperties, jtaTransactionManager) {
 
     private val TRUE = "true"
     private val FALSE = "false"

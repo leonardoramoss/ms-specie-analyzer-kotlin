@@ -3,17 +3,17 @@ package io.species.analyzer.infrastructure.extension
 import java.lang.StringBuilder
 import java.util.concurrent.atomic.AtomicLong
 
-fun Array<String>.explodeValues() : Array<Array<Char>> = this.map { it.toCharArray().toTypedArray() }.toTypedArray()
+fun Array<String>.explodeValues(): Array<Array<Char>> = this.map { it.toCharArray().toTypedArray() }.toTypedArray()
 
-fun Array<String>.reverseStringArrayValues() : Array<String> = this.map { it.reversed() }.toTypedArray()
+fun Array<String>.reverseStringArrayValues(): Array<String> = this.map { it.reversed() }.toTypedArray()
 
-fun Array<Array<Char>>.multidimensionalCharToStringArray() : Array<String> {
+fun Array<Array<Char>>.multidimensionalCharToStringArray(): Array<String> {
     val builder = StringBuilder()
     val delimiter = "-"
 
     for (i in this.indices) {
         builder.append(this[i].joinToString(""))
-        if(i != this.size - 1) {
+        if (i != this.size - 1) {
             builder.append(delimiter)
         }
     }
@@ -21,7 +21,7 @@ fun Array<Array<Char>>.multidimensionalCharToStringArray() : Array<String> {
     return builder.toString().split(delimiter).toTypedArray()
 }
 
-fun Array<Array<Char>>.transposeRowToColumn() : Array<Array<Char>> {
+fun Array<Array<Char>>.transposeRowToColumn(): Array<Array<Char>> {
 
     val transposeMatrix = Array(this.size) { CharArray(this[0].size).toTypedArray() }
 
@@ -34,7 +34,7 @@ fun Array<Array<Char>>.transposeRowToColumn() : Array<Array<Char>> {
     return transposeMatrix
 }
 
-fun Array<Array<Char>>.diagonalMultidimensionalCharToArrayString() : Array<String> {
+fun Array<Array<Char>>.diagonalMultidimensionalCharToArrayString(): Array<String> {
 
     val length: Int = this.size
     val delimiter = "-"

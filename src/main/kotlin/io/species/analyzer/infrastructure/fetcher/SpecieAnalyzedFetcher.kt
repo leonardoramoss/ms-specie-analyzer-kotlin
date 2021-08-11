@@ -6,9 +6,11 @@ import io.species.analyzer.infrastructure.generator.UUIDGenerator
 import org.springframework.stereotype.Component
 
 @Component
-class SpecieAnalyzedFetcher(val specieAnalysisRepository: SpecieAnalysisRepository,
-                            val uuidGenerator: UUIDGenerator<SpecieAnalysis>) : Fetcher<SpecieAnalysis, SpecieAnalysis> {
+class SpecieAnalyzedFetcher(
+    private val specieAnalysisRepository: SpecieAnalysisRepository,
+    private val uuidGenerator: UUIDGenerator<SpecieAnalysis>
+) : Fetcher<SpecieAnalysis, SpecieAnalysis> {
 
-    override fun fetch(specieAnalysis: SpecieAnalysis?): SpecieAnalysis? =
-        specieAnalysisRepository.findById(uuidGenerator.generate(specieAnalysis)).orElse(null)
+    override fun fetch(argument: SpecieAnalysis?): SpecieAnalysis? =
+        specieAnalysisRepository.findById(uuidGenerator.generate(argument)).orElse(null)
 }

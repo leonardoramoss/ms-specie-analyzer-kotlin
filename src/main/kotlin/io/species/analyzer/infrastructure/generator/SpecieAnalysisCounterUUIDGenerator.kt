@@ -7,8 +7,8 @@ import java.util.UUID
 @Component
 class SpecieAnalysisCounterUUIDGenerator : UUIDGenerator<SpecieAnalysisCounter> {
 
-    override fun generate(specieAnalysisCounter: SpecieAnalysisCounter?): UUID {
-        return specieAnalysisCounter
+    override fun generate(argument: SpecieAnalysisCounter?): UUID {
+        return argument
             ?.let { it.specieIdentifier.toString() }
             ?.let { UUID.nameUUIDFromBytes(it.toByteArray()) }
             ?: TODO()

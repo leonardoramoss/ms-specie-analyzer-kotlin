@@ -11,7 +11,7 @@ import java.util.regex.Pattern
 class PrimateAnalyzer : Analyzer {
 
     override fun analyze(specieAnalysis: SpecieAnalysis): SpecieAnalysis {
-        return if(isSimian(specieAnalysis.originalDNA())) {
+        return if (isSimian(specieAnalysis.originalDNA())) {
             specieAnalysis.markIdentifiedAs(SpecieIdentifier.SIMIAN)
         } else {
             specieAnalysis.markIdentifiedAs(SpecieIdentifier.HUMAN)
@@ -21,7 +21,7 @@ class PrimateAnalyzer : Analyzer {
     /**
      *
      */
-    private fun isSimian(dna: Array<DNA>) : Boolean {
+    private fun isSimian(dna: Array<DNA>): Boolean {
         val pattern = Pattern.compile(".*(A{4}|C{4}|G{4}|T{4}).*")
         val dnaManipulation = DNAManipulation(dna)
 
@@ -31,5 +31,5 @@ class PrimateAnalyzer : Analyzer {
             isSimianByPattern(dnaManipulation.transposeReversedDiagonalDNASequence(), pattern)
     }
 
-    private fun isSimianByPattern(dna: Array<DNA>, pattern: Pattern) : Boolean = dna.any { pattern.matcher(it).matches() }
+    private fun isSimianByPattern(dna: Array<DNA>, pattern: Pattern): Boolean = dna.any { pattern.matcher(it).matches() }
 }

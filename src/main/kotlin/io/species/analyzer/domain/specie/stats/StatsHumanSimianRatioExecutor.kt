@@ -15,7 +15,7 @@ class StatsHumanSimianRatioExecutor(private val fetcher: StatsCounterHumanSimian
         val humanCount = speciesCount?.get(SpecieIdentifier.HUMAN) ?: 0
         val simianCount = speciesCount?.get(SpecieIdentifier.SIMIAN) ?: 0
 
-        val ratio = if(humanCount == 0L) {
+        val ratio = if (humanCount == 0L) {
             BigDecimal.valueOf(simianCount)
         } else {
             BigDecimal.valueOf((simianCount * 100.0f / humanCount).toDouble())
@@ -29,7 +29,7 @@ class StatsHumanSimianRatioExecutor(private val fetcher: StatsCounterHumanSimian
 data class StatsHumanSimianRatioResult(
     val humanCount: Long,
     val simianCount: Long,
-    private val ratio: BigDecimal) : StatsResult<BigDecimal> {
-
+    private val ratio: BigDecimal
+) : StatsResult<BigDecimal> {
     override fun result(): BigDecimal = ratio
 }

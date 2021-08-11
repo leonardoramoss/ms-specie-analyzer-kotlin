@@ -8,16 +8,18 @@ import io.species.analyzer.infrastructure.generator.UUIDGenerator
 import org.springframework.stereotype.Component
 
 @Component
-class IncrementSpecieAnalyzedCounterCommand(val specieAnalysisCounterRepository: SpecieAnalysisCounterRepository,
-                                            val specieAnalysisCounterUUIDGenerator: UUIDGenerator<SpecieAnalysisCounter>,
-                                            val specieAnalysisCounterAdapter: Adapter<SpecieAnalysis, SpecieAnalysisCounter>) :
+class IncrementSpecieAnalyzedCounterCommand(
+    private val specieAnalysisCounterRepository: SpecieAnalysisCounterRepository,
+    private val specieAnalysisCounterUUIDGenerator: UUIDGenerator<SpecieAnalysisCounter>,
+    private val specieAnalysisCounterAdapter: Adapter<SpecieAnalysis, SpecieAnalysisCounter>
+) :
     Command<SpecieAnalysis> {
 
-    @Synchronized override fun execute(specieAnalysis: SpecieAnalysis) {
-        val updatedSpeciesCounter = specieAnalysis.identifier?.let { specieAnalysisCounterRepository.incrementSpecieCounter(it) }
+    @Synchronized override fun execute(argument: SpecieAnalysis) {
+        val updatedSpeciesCounter = argument.identifier?.let { specieAnalysisCounterRepository.incrementSpecieCounter(it) }
 
-        if(updatedSpeciesCounter != 1) {
-            val specieAnalysisCounter = specieAnalysisCounterAdapter.adapt(specieAnalysis)
+        if (updatedSpeciesCounter != 1) {
+            val specieAnalysisCounter = specieAnalysisCounterAdapter.adapt(argument)
 
             val analysisCounter = specieAnalysisCounter.copy(
                 uuid = specieAnalysisCounterUUIDGenerator.generate(specieAnalysisCounter)

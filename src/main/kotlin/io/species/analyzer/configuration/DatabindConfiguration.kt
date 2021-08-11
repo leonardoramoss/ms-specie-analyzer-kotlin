@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 class DatabindConfiguration {
 
     @Bean
-    fun serializers(serializers: List<AbstractSerializer<*>> = listOf()) : Map<Class<*>, AbstractSerializer<*>> {
-        return serializers.map { it.type() to it }.toMap()
+    fun serializers(serializers: List<AbstractSerializer<*>> = listOf()): Map<Class<*>, AbstractSerializer<*>> {
+        return serializers.associateBy { it.type() }
     }
 }

@@ -11,7 +11,6 @@ import io.species.analyzer.infrastructure.exception.SpecieAnalysisDeserializatio
 import io.species.analyzer.infrastructure.exception.SpecieAnalysisException
 import io.species.analyzer.infrastructure.serialization.SerializationLabel
 import java.lang.Exception
-import java.util.Objects
 
 abstract class AbstractDeserializer<T> : JsonDeserializer<T>() {
 
@@ -27,7 +26,7 @@ abstract class AbstractDeserializer<T> : JsonDeserializer<T>() {
         } catch (e: SpecieAnalysisException) {
             throw e
         } catch (e: Exception) {
-            throw SpecieAnalysisDeserializationException("Cannot deserializer ${jsonNode}. Is not a valid payload.")
+            throw SpecieAnalysisDeserializationException("Cannot deserializer $jsonNode. Is not a valid payload.")
         }
     }
 

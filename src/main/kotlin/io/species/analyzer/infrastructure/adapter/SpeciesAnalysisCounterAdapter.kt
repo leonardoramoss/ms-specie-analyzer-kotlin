@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component
 @Component
 class SpeciesAnalysisCounterAdapter : Adapter<SpecieAnalysis, SpecieAnalysisCounter> {
 
-    override fun adapt(specieAnalysis: SpecieAnalysis): SpecieAnalysisCounter =
-        SpecieAnalysisCounter(specieIdentifier = specieAnalysis.identifier)
+    override fun adapt(argument: SpecieAnalysis): SpecieAnalysisCounter =
+        SpecieAnalysisCounter(specieIdentifier = argument.identifier)
 }

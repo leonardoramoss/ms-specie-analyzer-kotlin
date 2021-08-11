@@ -21,8 +21,8 @@ class DNAManipulation(private val dna: Array<DNA>) {
      * @param stringArray
      * @return transposed array
      */
-    fun transposeDNASequence() : Array<DNA> =
-         dna.explodeValues()
+    fun transposeDNASequence(): Array<DNA> =
+        dna.explodeValues()
             .transposeRowToColumn()
             .multidimensionalCharToStringArray()
 
@@ -41,7 +41,7 @@ class DNAManipulation(private val dna: Array<DNA>) {
      * @param dna
      * @return transposed array
      */
-    fun transposeDiagonalDNASequence() : Array<DNA> =
+    fun transposeDiagonalDNASequence(): Array<DNA> =
         dna.explodeValues()
             .diagonalMultidimensionalCharToArrayString()
 
@@ -60,7 +60,7 @@ class DNAManipulation(private val dna: Array<DNA>) {
      * @param dna
      * @return transposed array
      */
-    fun transposeReversedDiagonalDNASequence() : Array<DNA> =
+    fun transposeReversedDiagonalDNASequence(): Array<DNA> =
         dna.reverseStringArrayValues().explodeValues()
             .diagonalMultidimensionalCharToArrayString()
 }

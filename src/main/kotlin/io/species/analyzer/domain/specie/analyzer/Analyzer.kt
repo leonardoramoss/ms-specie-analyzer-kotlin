@@ -4,5 +4,5 @@ import io.species.analyzer.domain.specie.SpecieAnalysis
 
 interface Analyzer {
 
-    fun analyze(specieAnalysis: SpecieAnalysis) : SpecieAnalysis
+    fun analyze(specieAnalysis: SpecieAnalysis): SpecieAnalysis
 }

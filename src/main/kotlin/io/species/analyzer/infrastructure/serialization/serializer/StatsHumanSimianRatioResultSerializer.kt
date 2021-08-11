@@ -1,7 +1,6 @@
 package io.species.analyzer.infrastructure.serialization.serializer
 
 import io.species.analyzer.domain.specie.stats.StatsHumanSimianRatioResult
-import io.species.analyzer.infrastructure.context.DefaultApplicationContextHolder
 import io.species.analyzer.infrastructure.serialization.SerializationLabel
 import org.springframework.stereotype.Component
 

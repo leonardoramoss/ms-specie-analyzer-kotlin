@@ -6,11 +6,13 @@ import io.species.analyzer.infrastructure.generator.UUIDGenerator
 import org.springframework.stereotype.Component
 
 @Component
-class SpecieAnalyzedEventListener(val repository: SpecieAnalysisRepository,
-                                  val uuidGenerator: UUIDGenerator<SpecieAnalysis>) : EventListener<SpecieAnalyzedEvent> {
+class SpecieAnalyzedEventListener(
+    private val repository: SpecieAnalysisRepository,
+    private val uuidGenerator: UUIDGenerator<SpecieAnalysis>
+) : EventListener<SpecieAnalyzedEvent> {
 
-    override fun onEvent(specieAnalyzedEvent: SpecieAnalyzedEvent) {
-        val specieAnalysis = specieAnalyzedEvent.source.withUUID(uuidGenerator)
+    override fun onEvent(event: SpecieAnalyzedEvent) {
+        val specieAnalysis = event.source.withUUID(uuidGenerator)
         repository.save(specieAnalysis)
     }
 }

@@ -5,13 +5,15 @@ import io.species.analyzer.domain.specie.SpecieIdentifier
 import org.springframework.stereotype.Component
 
 @Component
-class StatsCounterHumanSimianFetcher(val specieAnalysisCounterRepository: SpecieAnalysisCounterRepository) : Fetcher<List<SpecieIdentifier>, Map<SpecieIdentifier, Long>> {
+class StatsCounterHumanSimianFetcher(
+    private val specieAnalysisCounterRepository: SpecieAnalysisCounterRepository
+) : Fetcher<List<SpecieIdentifier>, Map<SpecieIdentifier, Long>> {
 
-    override fun fetch(speciesIdentifiers: List<SpecieIdentifier>?): Map<SpecieIdentifier, Long>? {
-        val speciesAnalysisCounters = speciesIdentifiers?.let { specieAnalysisCounterRepository.findAllBySpecieIdentifierIn(it) }
+    override fun fetch(argument: List<SpecieIdentifier>?): Map<SpecieIdentifier, Long>? {
+        val speciesAnalysisCounters = argument?.let { specieAnalysisCounterRepository.findAllBySpecieIdentifierIn(it) }
 
         return speciesAnalysisCounters?.mapNotNull { it ->
-            if(it.specieIdentifier != null && it.counter != null) {
+            if (it.specieIdentifier != null && it.counter != null) {
                 it.specieIdentifier to it.counter
             } else null
         }?.toMap()

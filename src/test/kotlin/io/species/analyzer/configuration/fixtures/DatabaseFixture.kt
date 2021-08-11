@@ -25,9 +25,9 @@ class DatabaseFixture(@Autowired private val jdbcTemplate: JdbcTemplate) : Datab
     override fun verifyDatabase(fileName: String, tableName: String, query: String?, vararg ignoredColumns: String) =
         assertEqualsByQuery(loadDataSet("/expected/datasets/$fileName"), databaseConnection(), query, tableName, ignoredColumns)
 
-    private fun databaseConnection() : IDatabaseConnection =
+    private fun databaseConnection(): IDatabaseConnection =
         try {
-            databaseConnection = databaseConnection?: DatabaseConnection(jdbcTemplate.dataSource?.connection)
+            databaseConnection = databaseConnection ?: DatabaseConnection(jdbcTemplate.dataSource?.connection)
             databaseConnection as IDatabaseConnection
         } catch (e: DatabaseUnitException) {
             throw RuntimeException(e.cause)
@@ -48,14 +48,14 @@ class DatabaseFixture(@Autowired private val jdbcTemplate: JdbcTemplate) : Datab
             throw RuntimeException("Cannot read the dataset file $datasetFile", e)
         }
 
-    fun databaseExpectationBuilder() : DatabaseExpectationBuilder = DatabaseExpectationBuilder()
+    fun databaseExpectationBuilder(): DatabaseExpectationBuilder = DatabaseExpectationBuilder()
 
     inner class DatabaseExpectationBuilder(private var mappedQueries: MutableMap<String, MutableList<String>> = mutableMapOf()) {
 
-        fun addExpectation(tableName: String) : DatabaseExpectationBuilder =
+        fun addExpectation(tableName: String): DatabaseExpectationBuilder =
             addExpectation(tableName, "SELECT * FROM $tableName")
 
-        fun addExpectation(tableName: String, query: String): DatabaseExpectationBuilder {
+        private fun addExpectation(tableName: String, query: String): DatabaseExpectationBuilder {
             if (mappedQueries.containsKey(tableName)) {
                 mappedQueries[tableName]?.add(query)
             } else {

@@ -17,7 +17,7 @@ class DefaultApplicationContextHolder {
 
         fun getBean(beanName: String?): Any? = getBean(beanName, Any::class.java)
 
-        fun <T> getBean(beanName: String?, clazz: Class<T>): T? {
+        private fun <T> getBean(beanName: String?, clazz: Class<T>): T? {
             return beanName
                 ?.let { bean -> applicationContext?.getBean(bean, clazz) }
                 ?: applicationContext?.getBean(clazz)
